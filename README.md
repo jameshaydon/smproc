@@ -12,13 +12,13 @@ This library helps in defining a system of concurrent communicating processes. T
 
 * The morphisms `[u_0, ..., u_m] -> [w_0, ..., w_n]` in the category are represented by concurrent process which have `u_0`, ..., `u_m` as *top* wires and `w_0`, ..., `w_n` as *bottom* wires. On both the top and bottom a process may have input and output wires, because of the orientation of those wires. The type of processes is given by the dependent type
 
-      Hom [u_0, ..., u_m] [w_0, ..., w_n].
+       Hom [u_0, ..., u_m] [w_0, ..., w_n].
 
 * Processes `f : Hom as bs` and `g : Hom bs cs` may be composed, producing `f -*- g : Hom as cs`, and this makes a category. This is acheived by joining the appropriate communication channels between `f` and `g`.
 
 * There is also a monoidal structure producing
 
-      f + g : Hom (as ++ as') (bs ++ bs')
+       f + g : Hom (as ++ as') (bs ++ bs')
 
 whenever
 
