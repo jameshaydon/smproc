@@ -95,16 +95,27 @@ where:
 
 This can be visualised as:
 
-       │
-       ↓  
-       │
-    ┌──┴──┐
-    │  +1 │
-    └──┬──┘
-       │
-       ↓  
-       │
-    ┌──┴──┐
-    │ > 5 │
-    └─┬─┬─┘
-     ─┘
+       ↓
+       │   ┌─────┐
+       └───┤     │
+           │     │
+           ↓     ↑
+           │     │
+        ┌──┴──┐  │
+        │  +1 │  │
+        └──┬──┘  │
+           │     │
+           ↓     │
+           │     │
+        ┌──┴──┐  │
+        │ > 5 │  │
+        └─┬─┬─┘  │
+        ┌─┘ ↓    ↑
+        │   │    │
+        ↓   └────┘   
+        │    
+    ┌───┴───┐
+    │ print │
+    └───────┘
+
+Which is a process that, when an integer is sent to it's only input wire, will keep incrementing that integer untill it is greater than 6, and this it will print it.
