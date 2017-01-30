@@ -2,7 +2,7 @@
 
 A well-typed symmetric-monoidal category of concurrent processes in [Idris](http://www.idris-lang.org/).
 
-Still very experimental. (Run the example)[#how-to-run-the-example].
+Still very experimental. [Run the example](https://github.com/jameshaydon/smproc#how-to-run-the-example).
 
 ## Idea
 
