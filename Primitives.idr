@@ -9,7 +9,7 @@ import Proto
 ||| Takes a pure function and returns a process that depends on a slot
 ||| This process will wait for another process to register to its output
 ||| Then it will tranform messages according to the pure function.
-mkPure': (Show a, Show b) => (name: String) -> (f: a -> b) -> Slot b -> Mor [Down a] [Down b]
+mkPure': (Show a, Show b) => (name: String) -> (f: a -> b) -> Slot b -> Hom [Down a] [Down b]
 mkPure' name f EmptySlot = do Just msg <- Respond (\msg => Pure (fst (handleInitMsg msg))) | _ => Loop (mkPure' name f EmptySlot)
                               Loop $ mkPure' name f (snd (handleInitMsg msg))
   where
@@ -21,8 +21,7 @@ mkPure' name f EmptySlot = do Just msg <- Respond (\msg => Pure (fst (handleInit
     handleInitMsg (Conn (BotOutWire (There _)) _ _)         impossible
     handleInitMsg (Conn (TopOutWire (There _)) _ _)         impossible
 mkPure' name f {a} {b} fs@(FullSlot pid tar) = do --Action $ putStrLn $ name ++ "normal loop"
-                                                  Just msg <- Respond (\msg => Pure (normal msg)) | _ => do Action $ putStrLn $ name ++ "nothing to respond to"
-                                                                                                            Loop (mkPure' name f fs)
+                                                  Just msg <- Respond (\msg => Pure (normal msg)) | _ => Loop (mkPure' name f fs)
                                                   forward msg
                                                   Loop (mkPure' name f fs)
   where
@@ -39,11 +38,11 @@ mkPure' name f {a} {b} fs@(FullSlot pid tar) = do --Action $ putStrLn $ name ++ 
     normal (Val (TopInWire (There _)) _) impossible
     normal (Val (BotInWire (There _)) _) impossible
 
-export mkPure: (Show a, Show b) => (name: String) -> (f: a -> b) -> Mor [Down a] [Down b]
+export mkPure: (Show a, Show b) => (name: String) -> (f: a -> b) -> Hom [Down a] [Down b]
 mkPure name f = mkPure' name f EmptySlot
 
 ||| A service wich prints integers to the console
-export downPrinter: Mor [Down Int] []
+export downPrinter: Hom [Down Int] []
 downPrinter = do Respond resp
                  Loop downPrinter
   where resp: (msg : Req (MkNiche [Down Int] [])) -> Process (ProcIF (MkNiche [Down Int] [])) (ProcIF (MkNiche [Down Int] []) msg) Ready Ready
@@ -55,7 +54,7 @@ downPrinter = do Respond resp
         resp (Val (BotInWire Here) _)      impossible
         resp (Val (BotInWire (There _)) _) impossible
 
-export upPrinter: Mor [] [Up Int]
+export upPrinter: Hom [] [Up Int]
 upPrinter = do Respond resp
                Loop upPrinter
   where

@@ -28,6 +28,6 @@ loop pid = do --Action $ putStrLn "dual: starting normal loop"
               Loop    $ loop pid
 
 partial
-dualise: Mor cut_a cut_b -> Mor (dual cut_b) (dual cut_a)
+dualise: Hom cut_a cut_b -> Hom (dual cut_b) (dual cut_a)
 dualise proc = do Just pid <- Spawn proc
                   loop pid

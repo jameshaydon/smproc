@@ -12,22 +12,22 @@ import SumWire
 import ProcUnit
 import Util
 
-gt5: Mor [Down Int] [Down Int, Down Int]
-gt5 = mkPure "gt5: " (\n => if n > 5 then Left n else Right n) -.- splitEither
+gt5: Hom [Down Int] [Down Int, Down Int]
+gt5 = mkPure "gt5: " (\n => if n > 5 then Left n else Right n) -*- splitEither
 
-inc: Mor [Down Int] [Down Int]
+inc: Hom [Down Int] [Down Int]
 inc = mkPure "inc: " (\i => i + 1)
 
-downIntWire: Mor [Down Int] [Down Int]
+downIntWire: Hom [Down Int] [Down Int]
 downIntWire = mkPure "down int: " id
 
-upIntWire: Mor [Up Int] [Up Int]
+upIntWire: Hom [Up Int] [Up Int]
 upIntWire = dualise downIntWire
 
-myProc: Mor [Down Int] []
+myProc: Hom [Down Int] []
 myProc =     downIntWire + capS
-         -.- (splice -.- inc -.- gt5) + upIntWire
-         -.- downPrinter + cup
+         -*- (splice -*- inc -*- gt5) + upIntWire
+         -*- downPrinter + cup
 
 test: Client ()
 test = do Just proc <- Spawn myProc | _ => Action (putStrLn "failed to spawn the process")

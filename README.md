@@ -26,7 +26,7 @@ whenever
 This runs the processes `f` and `g` in parallel. This makes the category of processes a symetric monoidal category, because also have a special process:
 
       sym: Hom (as ++ bs) (bs ++ as)
-      
+
 Because we get a symetric monoidal category, we reason about the processes using [string diagrams](https://ncatlab.org/nlab/show/string+diagram).
 
 ## Example

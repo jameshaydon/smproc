@@ -47,22 +47,22 @@ resp pid_f pid_g val@(Val (BotInWire _) _)     = do r <- Request pid_g val
                                                     --Action $ putStrLn $ "vert: reroute bot val: " ++ show r
                                                     Pure r
 
-infixl 3 -.-
+infixl 3 -*-
 
 ||| Vertical composition of morphisms in the category of processes
 public export partial
-(-.-): {l,m,n: Nat} -> {cut_a: Cut l} -> {cut_b: Cut m} -> {cut_c: Cut n} ->
-       Mor cut_a cut_b -> Mor cut_b cut_c -> Mor cut_a cut_c
-(-.-) {cut_b} f g = do Just pid_f <- Spawn f | _ => do Action $ putStrLn "ERROR: (-.-): failed spawn 1"
-                                                       f -.- g
-                       Just pid_g <- Spawn g | _ => do Action $ putStrLn "ERROR: (-.-): failed spawn 2"
-                                                       f -.- g
+(-*-): {l,m,n: Nat} -> {cut_a: Cut l} -> {cut_b: Cut m} -> {cut_c: Cut n} ->
+       Hom cut_a cut_b -> Hom cut_b cut_c -> Hom cut_a cut_c
+(-*-) {cut_b} f g = do Just pid_f <- Spawn f | _ => do Action $ putStrLn "ERROR: (-*-): failed spawn 1"
+                                                       f -*- g
+                       Just pid_g <- Spawn g | _ => do Action $ putStrLn "ERROR: (-*-): failed spawn 2"
+                                                       f -*- g
                        makeConnections cut_b pid_f pid_g
                        looper pid_f pid_g
   where
     looper : ProcPID (MkNiche cut_a cut_b) ->
              ProcPID (MkNiche cut_b cut_c) ->
              Process (ProcIF (MkNiche cut_a cut_c)) () Ready Looping
-    looper pid_f pid_g = do --Action $ putStrLn $ "(-.-): normal loop"
+    looper pid_f pid_g = do --Action $ putStrLn $ "(-*-): normal loop"
                             Respond (resp pid_f pid_g)
                             Loop (looper pid_f pid_g)

@@ -59,7 +59,7 @@ initResp slot_a    slot_b    (Val _ _)                                = ( Pure E
 initResp _         _         (Conn (BotOutWire (There (There _))) _ _) impossible
 initResp _         _         (Conn (TopOutWire (There _)) _ _)         impossible
 
-splitEither': Slot a -> Slot b -> Mor [Down (Either a b)] [Down a, Down b]
+splitEither': Slot a -> Slot b -> Hom [Down (Either a b)] [Down a, Down b]
 splitEither' sl1@(FullSlot pid_a tar_a) sl2@(FullSlot pid_b tar_b) = do
   r <- Respond normal
   forward pid_a tar_a pid_b tar_b r
@@ -68,7 +68,7 @@ splitEither' {a} {b} slot_a slot_b = do
   Just msg <- Respond $ (\msg => pi1 (initResp slot_a slot_b msg)) | _ => Loop (splitEither' slot_a slot_b)
   Loop $ splitEither' (pi2 $ initResp slot_a slot_b msg) (pi3 $ initResp slot_a slot_b msg)
 
-export splitEither: Mor [Down (Either a b)] [Down a, Down b]
+export splitEither: Hom [Down (Either a b)] [Down a, Down b]
 splitEither = splitEither' EmptySlot EmptySlot
 
 ------------------------------
@@ -96,14 +96,14 @@ normalJ pid tar (Val (TopInWire (There Here)) x)      = ( Accepted, do { Request
 normalJ pid tar (Val (TopInWire (There (There _))) _) impossible
 normalJ pid tar (Val (BotInWire (There _)) _)         impossible
 
-joinEither': Slot (Either a b) -> Mor [Down a, Down b] [Down (Either a b)]
+joinEither': Slot (Either a b) -> Hom [Down a, Down b] [Down (Either a b)]
 joinEither' slot@(FullSlot pid tar) = do Just msg <- Respond (\msg => Pure $ fst $ normalJ pid tar msg) | _ => Loop (joinEither' slot)
                                          snd $ normalJ pid tar msg
                                          Loop (joinEither' slot)
 joinEither' EmptySlot = do Just msg <- Respond (\msg => fst (respJ msg)) | _ => Loop (joinEither' EmptySlot)
                            Loop $ joinEither' $ snd (respJ msg)
 
-export joinEither: Mor [Down a, Down b] [Down (Either a b)]
+export joinEither: Hom [Down a, Down b] [Down (Either a b)]
 joinEither = joinEither' EmptySlot
 
 -----------------------------------
@@ -116,8 +116,8 @@ symEither: Either a b -> Either b a
 symEither (Left x)  = Right x
 symEither (Right x) = Left x
 
-export partial sym: (Show a, Show b) => Mor [Down a, Down b] [Down b, Down a]
-sym = joinEither -.- (mkPure "sym: " symEither) -.- splitEither
+export partial sym: (Show a, Show b) => Hom [Down a, Down b] [Down b, Down a]
+sym = joinEither -*- (mkPure "sym: " symEither) -*- splitEither
 
 --------------------------------------
 --  Splicing
@@ -127,5 +127,5 @@ spliceEither: Either a a -> a
 spliceEither (Left x)  = x
 spliceEither (Right x) = x
 
-export partial splice: Show a => Mor [Down a, Down a] [Down a]
-splice = joinEither -.- (mkPure "splice: " spliceEither)
+export partial splice: Show a => Hom [Down a, Down a] [Down a]
+splice = joinEither -*- (mkPure "splice: " spliceEither)

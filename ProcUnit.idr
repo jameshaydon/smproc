@@ -8,7 +8,7 @@ import Primitives
 
 %default total
 
-cap': Slot a -> Mor [] [Up a, Down a]
+cap': Slot a -> Hom [] [Up a, Down a]
 cap' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (cap' EmptySlot)
                         Loop (cap' (fillSlot blam))
   where
@@ -47,7 +47,7 @@ cap' {a} (FullSlot pid target) = do Action $ putStrLn "cap: starting loop"
 
 -- cap going the other way
 
-capS': Slot a -> Mor [] [Down a, Up a]
+capS': Slot a -> Hom [] [Down a, Up a]
 capS' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (capS' EmptySlot)
                          Loop (capS' (fillSlot blam))
   where
@@ -96,9 +96,8 @@ capS' {a} slot@(FullSlot pid target) = do Just msg <- Respond normal | _ => Loop
 
 -- cup
 
-cup': Slot a -> Mor [Down a, Up a] []
-cup' {a} EmptySlot = do Just blam <- Respond initResp | _ => do Action $ putStrLn "cup: nothing to respond to"
-                                                                Loop (cup' EmptySlot)
+cup': Slot a -> Hom [Down a, Up a] []
+cup' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (cup' EmptySlot)
                         Loop (cup' (fillSlot blam))
   where
     fillSlot: Req (MkNiche [Down a, Up a] []) -> Slot a
@@ -118,8 +117,7 @@ cup' {a} EmptySlot = do Just blam <- Respond initResp | _ => do Action $ putStrL
     initResp (Conn (BotOutWire Here) _ _) impossible
     initResp (Conn (BotOutWire (There _)) _ _) impossible
 
-cup' {a} (FullSlot pid target) = do Just msg <- Respond normal | _ => do Action $ putStrLn $ "cup: nothing to respond to"
-                                                                         Loop (cup' (FullSlot pid target))
+cup' {a} (FullSlot pid target) = do Just msg <- Respond normal | _ => Loop (cup' (FullSlot pid target))
                                     forward msg
                                     Loop (cup' (FullSlot pid target))
   where
@@ -143,11 +141,11 @@ cup' {a} (FullSlot pid target) = do Just msg <- Respond normal | _ => do Action 
 
 -- public:
 
-export cap: Mor [] [Up a, Down a]
+export cap: Hom [] [Up a, Down a]
 cap = cap' EmptySlot
 
-export capS: Mor [] [Down a, Up a]
+export capS: Hom [] [Down a, Up a]
 capS = capS' EmptySlot
 
-export cup: Mor [Down a, Up a] []
+export cup: Hom [Down a, Up a] []
 cup = cup' EmptySlot

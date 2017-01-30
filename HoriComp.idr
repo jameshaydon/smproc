@@ -40,7 +40,7 @@ resp {top0 = top0} {top1 = top1} {bot0 = bot0} {bot1 = bot1} pid_a pid_b (Val (B
 partial
 (+): {m0,n0,m1,n1: Nat} ->
      {top0: Cut m0} -> {top1: Cut m1} -> {bot0: Cut n0} -> {bot1: Cut n1} ->
-     Mor top0 bot0 -> Mor top1 bot1 -> Mor (top0 ++ top1) (bot0 ++ bot1)
+     Hom top0 bot0 -> Hom top1 bot1 -> Hom (top0 ++ top1) (bot0 ++ bot1)
 (+) alpha beta = do Just pid_a <- Spawn alpha
                     Just pid_b <- Spawn beta
                     looper pid_a pid_b

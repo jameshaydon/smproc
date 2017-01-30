@@ -6,23 +6,15 @@ import ProcessLib
 
 %default total
 
-namespace Direction
-  ||| All wires go either up or down
-  data Direction = Down | Up
-
-  dual: Direction -> Direction
-  dual Down = Up
-  dual Up   = Down
-
 namespace DirectedType
   ||| DTy = DirectedTypes = a typed wire that goes up or down
   public export data DTy = Down Type | Up Type
 
-  type: DTy -> Type
+  public export type: DTy -> Type
   type (Down ty) = ty
   type (Up   ty) = ty
 
-  dual: DTy -> DTy
+  public export dual: DTy -> DTy
   dual (Down x) = Up x
   dual (Up   x) = Down x
 
@@ -32,7 +24,7 @@ namespace Cut
   public export Cut: Nat -> Type
   Cut n = Vect n DTy
 
-  dual: Cut n -> Cut n
+  public export dual: Cut n -> Cut n
   dual = map dual
 
 ||| A niche is the top and bottom cut representing the full interface
@@ -88,8 +80,8 @@ mutual
   ProcPID niche = MessagePID (ProcIF niche)
 
 ||| The morphisms in our category
-public export Mor: Cut m -> Cut n -> Type
-Mor c0 c1 = Service (ProcIF (MkNiche c0 c1)) ()
+public export Hom: Cut m -> Cut n -> Type
+Hom c0 c1 = Service (ProcIF (MkNiche c0 c1)) ()
 
 public export SubProc: Niche m n -> Type -> Type
 SubProc niche a = Process (ProcIF niche) a Ready Ready
@@ -102,13 +94,13 @@ public export data Slot: Type -> Type where
 
 -- some lemmas we need
 
-dualAddrUp: {c: Cut n} -> Elem (Up a) (map DirectedType.dual c) -> Elem (Down a) c
+export dualAddrUp: {c: Cut n} -> Elem (Up a) (map DirectedType.dual c) -> Elem (Down a) c
 dualAddrUp {c= []}             {a= _} Here          impossible
 dualAddrUp {c= []}             {a= _} (There _)     impossible
 dualAddrUp {c= (Down x) :: xs} {a= x} Here          = Here
 dualAddrUp {c= x :: xs}        {a= a} (There later) = There (dualAddrUp later)
 
-dualAddrDown: {c: Cut n} -> Elem (Down a) (map DirectedType.dual c) -> Elem (Up a) c
+export dualAddrDown: {c: Cut n} -> Elem (Down a) (map DirectedType.dual c) -> Elem (Up a) c
 dualAddrDown {c= []}           {a= _} Here          impossible
 dualAddrDown {c= []}           {a= _} (There _)     impossible
 dualAddrDown {c= (Up x) :: xs} {a= x} Here          = Here
