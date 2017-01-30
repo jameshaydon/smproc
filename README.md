@@ -15,12 +15,18 @@ This library helps in defining a system of concurrent communicating processes. T
 * Processes `f : Hom as bs` and `g : Hom bs cs` may be composed, producing `f -*- g : Hom as cs`, and this makes a category. This is acheived by joining the appropriate communication channels between `f` and `g`.
 
 * There is also a monoidal structure producing
+
       f + g : Hom (as ++ as') (bs ++ bs')
+
 whenever
+
       f : Hom as  bs
       g : Hom as' bs'
-This makes the category of processes a symetric monoidal category, because also have a special process:
+
+This runs the processes `f` and `g` in parallel. This makes the category of processes a symetric monoidal category, because also have a special process:
+
       sym: Hom (as ++ bs) (bs ++ as)
+      
 Because we get a symetric monoidal category, we reason about the processes using [string diagrams](https://ncatlab.org/nlab/show/string+diagram).
 
 ## Example
@@ -76,8 +82,8 @@ With these we can already produce a non-trivial composite process:
 
     myProc: Mor [Down Int] []
     myProc =     downIntWire + cap
-             -.- (splice -.- inc -.- gt5) + upIntWire
-             -.- downPrinter + cup
+             -*- (splice -*- inc -*- gt5) + upIntWire
+             -*- downPrinter + cup
 
 where:
 
