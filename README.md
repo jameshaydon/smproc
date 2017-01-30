@@ -6,11 +6,13 @@ Still very experimental. [Run the example](https://github.com/jameshaydon/smproc
 
 ## Idea
 
-This library helps in defining a system of concurrent communicating processes. The processes are structures as morphisms of a symettric monoidal category; see the [nLab](https://ncatlab.org/nlab/show/symmetric+monoidal+category) for an explanation of what those are.
+This library helps in defining a system of concurrent communicating processes. The processes are structured as morphisms in a symettric monoidal category; see the [nLab](https://ncatlab.org/nlab/show/symmetric+monoidal+category) for an explanation of what those are.
 
 * The objects are vectors of *oriented typed wires*, which are types decorated with one of the orientations: `Up` or `Down`. The monoidal structure on the objects is simply vector concatenation: `++`.
 
-* The morphisms `[u_0, ..., u_m] -> [w_0, ..., w_n]` in the category are represented by a concurrent process which has `u_0`, ..., `u_m` as *top* wires and `w_0`, ..., `w_n` as *bottom* wires. On both the top and bottom a process may have input and output wires, because of the orientation of those wires. The type of processes is given by the dependent type `Hom [u_0, ..., u_m] [w_0, ..., w_n]`.
+* The morphisms `[u_0, ..., u_m] -> [w_0, ..., w_n]` in the category are represented by concurrent process which have `u_0`, ..., `u_m` as *top* wires and `w_0`, ..., `w_n` as *bottom* wires. On both the top and bottom a process may have input and output wires, because of the orientation of those wires. The type of processes is given by the dependent type
+
+      Hom [u_0, ..., u_m] [w_0, ..., w_n].
 
 * Processes `f : Hom as bs` and `g : Hom bs cs` may be composed, producing `f -*- g : Hom as cs`, and this makes a category. This is acheived by joining the appropriate communication channels between `f` and `g`.
 
