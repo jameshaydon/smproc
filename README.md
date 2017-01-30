@@ -2,7 +2,7 @@
 
 A well-typed symmetric-monoidal category of concurrent processes in [Idris](http://www.idris-lang.org/).
 
-Still very experimental.
+Still very experimental. (Run the example)[#how-to-run-the-example].
 
 ## Idea
 
@@ -132,3 +132,9 @@ Which is a process that, when an integer is sent to it's only input wire, will k
 * Download the repo: `git clone https://github.com/jameshaydon/smproc.git`
 * Start the idris repl: `$ idris Examples.idr` (compilation will take a while)
 * Run main: `:exec main`
+
+## TODO
+
+* Make the abstract representation (started in `Bord.idr`)
+* Optimise the abstract representation using usual string diagram transformations
+* Write the compiler: `abstract rep --> process`
