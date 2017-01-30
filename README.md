@@ -1,4 +1,4 @@
-# smproc
+# SM-Proc
 
 A well-typed symmetric-monoidal category of concurrent processes in [Idris](http://www.idris-lang.org/).
 
@@ -78,7 +78,7 @@ We also have `cap` and `cup` which are the *unit* and *co-unit* respectively:
 
     cap : Mor [Down a, Up a] []
 
-With these we can already produce a non-trivial composite process:
+With these we can already produce a non-trivial composite process (See `Examples.idr`):
 
     myProc: Mor [Down Int] []
     myProc =     downIntWire + cap
@@ -125,3 +125,10 @@ This can be visualised as:
     └───────┘
 
 Which is a process that, when an integer is sent to it's only input wire, will keep incrementing that integer untill it is greater than 6, and this it will print it.
+
+## How to run the example
+
+* Install Idris: [instructions](https://github.com/idris-lang/Idris-dev/wiki/Installation-Instructions).
+* Download the repo: `git clone https://github.com/jameshaydon/smproc.git`
+* Start the idris repl: `$ idris Examples.idr` (compilation will take a while)
+* Run main: `:exec main`
