@@ -46,7 +46,7 @@ Given a pure function `f: a -> b`, this produces a process
     │ f │
     └─┬─┘
       │
-      ↓  b   <-- downwards input wire of type a
+      ↓  b   <-- downwards output wire of type b
       │
 
 There is also `upPrinter` and `downPrinter`:
