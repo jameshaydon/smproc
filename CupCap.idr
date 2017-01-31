@@ -1,4 +1,4 @@
-module ProcUnit
+module CupCap
 
 import Data.Vect
 import VectHelp
@@ -8,9 +8,9 @@ import Primitives
 
 %default total
 
-cap': Slot a -> Hom [] [Up a, Down a]
-cap' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (cap' EmptySlot)
-                        Loop (cap' (fillSlot blam))
+capT': Slot a -> Hom [] [Up a, Down a]
+capT' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (capT' EmptySlot)
+                         Loop (capT' (fillSlot blam))
   where
     fillSlot: Req (MkNiche [] [Up a, Down a]) -> Slot a
     fillSlot (Conn (BotOutWire (There Here)) pid target) = FullSlot pid target
@@ -28,9 +28,9 @@ cap' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (cap' EmptySlo
     initResp (Conn (BotOutWire (There (There _))) _ _) impossible
     initResp (Conn (TopOutWire _) _ _)                 impossible
 
-cap' {a} (FullSlot pid target) = do Action $ putStrLn "cap: starting loop"
-                                    Respond (normal pid target)
-                                    Loop (cap' (FullSlot pid target))
+capT' {a} (FullSlot pid target) = do Action $ putStrLn "cap: starting loop"
+                                     Respond (normal pid target)
+                                     Loop (capT' (FullSlot pid target))
   where
     normal : MessagePID (ProcIF niche) ->
              InWire niche a ->
@@ -47,9 +47,9 @@ cap' {a} (FullSlot pid target) = do Action $ putStrLn "cap: starting loop"
 
 -- cap going the other way
 
-capS': Slot a -> Hom [] [Down a, Up a]
-capS' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (capS' EmptySlot)
-                         Loop (capS' (fillSlot blam))
+cap': Slot a -> Hom [] [Down a, Up a]
+cap' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (cap' EmptySlot)
+                        Loop (cap' (fillSlot blam))
   where
     -- TODO: the following two functions do the same deconstructing work
     fillSlot: Req (MkNiche [] [Down a, Up a]) -> Slot a
@@ -72,9 +72,9 @@ capS' {a} EmptySlot = do Just blam <- Respond initResp | _ => Loop (capS' EmptyS
 --                                              Action $ putStrLn $ "capS got response: " ++ show r
 --                                              Pure r
 
-capS' {a} slot@(FullSlot pid target) = do Just msg <- Respond normal | _ => Loop (capS' slot)
-                                          forward msg
-                                          Loop (capS' slot)
+cap' {a} slot@(FullSlot pid target) = do Just msg <- Respond normal | _ => Loop (cap' slot)
+                                         forward msg
+                                         Loop (cap' slot)
   where
     forward : Req (MkNiche [] [Down a, Up a]) ->
               Process (ProcIF (MkNiche [] [Down a, Up a])) () Sent Sent
@@ -141,11 +141,11 @@ cup' {a} (FullSlot pid target) = do Just msg <- Respond normal | _ => Loop (cup'
 
 -- public:
 
-export cap: Hom [] [Up a, Down a]
-cap = cap' EmptySlot
+export capT: Hom [] [Up a, Down a]
+capT = capT' EmptySlot
 
-export capS: Hom [] [Down a, Up a]
-capS = capS' EmptySlot
+export cap: Hom [] [Down a, Up a]
+cap = cap' EmptySlot
 
 export cup: Hom [Down a, Up a] []
 cup = cup' EmptySlot

@@ -66,3 +66,8 @@ upPrinter = do Respond resp
     resp (Val (BotInWire (There later)) x) impossible
     resp (Val (TopInWire Here) _) impossible
     resp (Val (TopInWire (There _)) _) impossible
+
+-- downTick': Slot () -> Hom [] [Down ()]
+-- downTick' EmptySlot = ?oo_1
+-- downTick' s@(FullSlot pid tar) = do Respond (\msg => Pure Error)
+--                                     Loop (downTick' s)
