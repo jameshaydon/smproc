@@ -140,3 +140,5 @@ Which is a process that, when an integer is sent to it's only input wire, will k
 * Make the abstract representation (started in `Bord.idr`)
 * Optimise the abstract representation using usual string diagram transformations
 * Write the compiler: `abstract rep --> process`
+* For the moment the topology is fixed at compile-time. Think about how this can be more flexible.
+* Make a version for the javascript targer, maybe using [js-csp](https://github.com/ubolonton/js-csp)
