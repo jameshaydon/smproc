@@ -6,11 +6,11 @@ Still very experimental. [Run the example](https://github.com/jameshaydon/smproc
 
 ## Idea
 
-This library helps in defining a system of concurrent communicating processes. The processes are structured as morphisms in a symettric monoidal category; see the [nLab](https://ncatlab.org/nlab/show/symmetric+monoidal+category) for an explanation of what those are.
+This library helps in defining systems of concurrent communicating processes. The processes are structured as morphisms in a symmetric monoidal category; see the [nLab](https://ncatlab.org/nlab/show/symmetric+monoidal+category) for an explanation of what those are.
 
-* The objects are vectors of *oriented typed wires*, which are types decorated with one of the orientations: `Up` or `Down`. The monoidal structure on the objects is simply vector concatenation: `++`.
+* The objects are vectors of *oriented typed wires*, which are types decorated with one of the orientations `Up` or `Down`. The monoidal structure on the objects is simply vector concatenation: `++`. A wire represents a channel of communication between two processes and the orientation indicates the direction in which data flows.
 
-* The morphisms `[u_0, ..., u_m] -> [w_0, ..., w_n]` in the category are represented by concurrent process which have `u_0`, ..., `u_m` as *top* wires and `w_0`, ..., `w_n` as *bottom* wires. On both the top and bottom a process may have input and output wires, because of the orientation of those wires. The type of processes is given by the dependent type
+* The morphisms `[u_0, ..., u_m] -> [w_0, ..., w_n]` in the category are represented by concurrent process which have `u_0`, ..., `u_m` as *top* wires and `w_0`, ..., `w_n` as *bottom* wires. On both the top and bottom a process may have input and output wires, indicated by the orientation of those wires. The type of processes is given by the dependent type
 
        Hom [u_0, ..., u_m] [w_0, ..., w_n].
 
@@ -25,9 +25,9 @@ whenever
       f : Hom as  bs
       g : Hom as' bs'
 
-This runs the processes `f` and `g` in parallel. This makes the category of processes a symetric monoidal category, because also have a special process:
+This runs the processes `f` and `g` in parallel. This makes the category of processes a symmetric monoidal category, because there is also have a special process:
 
-      sym: Hom (as ++ bs) (bs ++ as)
+      sym: Hom (as ++ bs) (bs ++ as).
 
 Because we get a symetric monoidal category, we reason about the processes using [string diagrams](https://ncatlab.org/nlab/show/string+diagram).
 
@@ -126,7 +126,7 @@ This can be visualised as:
     │ print │
     └───────┘
 
-Which is a process that, when an integer is sent to it's only input wire, will keep incrementing that integer untill it is greater than 6, and this it will print it.
+Which is a process that, when an integer is sent to it's only input wire, will keep incrementing that integer until it is greater than 6, and then it will print it.
 
 ## How to run the example
 
@@ -137,8 +137,8 @@ Which is a process that, when an integer is sent to it's only input wire, will k
 
 ## TODO
 
-* Make the abstract representation (started in `Bord.idr`)
-* Optimise the abstract representation using usual string diagram transformations
-* Write the compiler: `abstract rep --> process`
+* Make the abstract representation (started in `Bord.idr`).
+* Optimise the abstract representation using string diagram transformations/simplifications.
+* Write the compiler: `abstract rep --> process`.
 * For the moment the topology is fixed at compile-time. Think about how this can be more flexible.
-* Make a version for the javascript targer, maybe using [js-csp](https://github.com/ubolonton/js-csp)
+* Make a version for the javascript targer, maybe using [js-csp](https://github.com/ubolonton/js-csp).
