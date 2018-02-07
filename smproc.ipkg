@@ -1,0 +1,18 @@
+package smproc
+
+sourcedir = src
+
+modules = ProcessLib
+        , Util
+        , VectHelp
+        , Proto
+        , Primitives
+        , CupCap
+        , Dualise
+        , VertComp
+        , SumWire
+        , HoriComp
+        , Bord
+        , Examples
+
+opts = "-p contrib"

@@ -29,14 +29,14 @@ mkPure' name f {a} {b} fs@(FullSlot pid tar) = do --Action $ putStrLn $ name ++ 
     forward (Conn _ _ _) = Pure ()
     forward (Val (TopInWire Here) x) = do Request pid (Val tar (f x))
                                           Action $ putStrLn $ name ++ show x ++ " -->-- " ++ show (f x)
-    forward (Val (TopInWire (There _)) _) impossible
-    forward (Val (BotInWire (There _)) _) impossible
+    forward (Val (TopInWire (There l)) _) = absurd l
+    forward (Val (BotInWire (There l)) _) = absurd l
 
-    normal: (msg : Req (MkNiche [Down a] [Down b])) -> (ProcIF (MkNiche [Down a] [Down b]) msg)
+    normal: (msg : Req (MkNiche [Down a] [Down b])) -> ProcIF (MkNiche [Down a] [Down b]) msg
     normal (Conn _ _ _)                  = Taken
     normal (Val (TopInWire Here) _)      = Accepted
-    normal (Val (TopInWire (There _)) _) impossible
-    normal (Val (BotInWire (There _)) _) impossible
+    normal (Val (TopInWire (There l)) _) = absurd l
+    normal (Val (BotInWire (There l)) _) = absurd l
 
 export mkPure: (Show a, Show b) => (name: String) -> (f: a -> b) -> Hom [Down a] [Down b]
 mkPure name f = mkPure' name f EmptySlot
