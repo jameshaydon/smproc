@@ -34,13 +34,6 @@ data Process : (iface : reqType -> Type) ->
      (>>=) : Process iface a st1 st2 -> (a -> Process iface b st2 st3) ->
              Process iface b st1 st3
 
---public export
---data Fuel = Dry | More (Lazy Fuel)
---
---export partial
---forever : Fuel
---forever = More forever
-
 export total
 run : Fuel -> Process iface t in_state out_state -> IO (Maybe t)
 run fuel (Request {service_iface} (MkMessage process) msg)
