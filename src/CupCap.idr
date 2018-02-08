@@ -81,18 +81,16 @@ cap' {a} slot@(FullSlot pid target) = do Just msg <- Respond normal | _ => Loop 
     forward (Conn _ _ _) = Pure ()
     forward (Val (BotInWire (There Here)) x) = do Request pid (Val target x)
                                                   Action $ putStrLn "passing through capS!"
-    forward (Val (BotInWire (There (There _))) _) impossible
-    forward (Val (TopInWire Here) _)              impossible
-    forward (Val (TopInWire (There _)) _)         impossible
+    forward (Val (BotInWire (There (There l))) _) = absurd l
+    forward (Val (TopInWire e) _) = absurd e
 
     normal : (msg : Req (MkNiche [] [Down a, Up a])) ->
              SubProc (MkNiche [] [Down a, Up a]) (ProcIF (MkNiche [] [Down a, Up a]) msg)
     normal (Val (BotInWire (There Here)) x) = Pure Accepted
     normal (Conn _ _ _) = do Action $ putStrLn "ERROR: cap got conn req when taken"
                              Pure Taken
-    normal (Val (BotInWire (There (There _))) _) impossible
-    normal (Val (TopInWire Here) _) impossible
-    normal (Val (TopInWire (There _)) _) impossible
+    normal (Val (BotInWire (There (There l))) _) = absurd l
+    normal (Val (TopInWire e) _) = absurd e
 
 -- cup
 

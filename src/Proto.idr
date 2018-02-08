@@ -95,13 +95,9 @@ public export data Slot: Type -> Type where
 -- some lemmas we need
 
 export dualAddrUp: {c: Cut n} -> Elem (Up a) (map DirectedType.dual c) -> Elem (Down a) c
-dualAddrUp {c= []}             {a= _} Here          impossible
-dualAddrUp {c= []}             {a= _} (There _)     impossible
-dualAddrUp {c= (Down x) :: xs} {a= x} Here          = Here
-dualAddrUp {c= x :: xs}        {a= a} (There later) = There (dualAddrUp later)
-
+dualAddrUp {c= (Down _) :: _}  Here         = Here
+dualAddrUp {c= _        :: _} (There later) = There (dualAddrUp later)
+--
 export dualAddrDown: {c: Cut n} -> Elem (Down a) (map DirectedType.dual c) -> Elem (Up a) c
-dualAddrDown {c= []}           {a= _} Here          impossible
-dualAddrDown {c= []}           {a= _} (There _)     impossible
-dualAddrDown {c= (Up x) :: xs} {a= x} Here          = Here
-dualAddrDown {c= x :: xs}      {a= a} (There later) = There (dualAddrDown later)
+dualAddrDown {c= (Up _) :: _}  Here         = Here
+dualAddrDown {c= _      :: _} (There later) = There (dualAddrDown later)
