@@ -62,7 +62,7 @@ There is also `upPrinter` and `downPrinter`:
 
 Note that one can be obtained from the other using the `dualise` function:
 
-    dualise: Mor as bs -> Mor (dual bs) (dual as)
+    dualise: Hom as bs -> Hom (dual bs) (dual as)
 
 where the dual of a typed wire is the same wire going in the other direction.
 
@@ -72,33 +72,33 @@ We also have `cap` and `cup` which are the *unit* and *co-unit* respectively:
      │    │
      └────┘
 
-    cup : Mor [Down a, Up a] []
+    cup : Hom [Down a, Up a] []
 
      ┌────┐
      │    │
      ↓    ↑
 
-    cap : Mor [Down a, Up a] []
+    cap : Hom [Down a, Up a] []
 
 With these we can already produce a non-trivial composite process (See `Examples.idr`):
 
-    myProc: Mor [Down Int] []
+    myProc: Hom [Down Int] []
     myProc =     downIntWire + cap
              -*- (splice -*- inc -*- gt5) + upIntWire
              -*- downPrinter + cup
 
 where:
 
-    gt5: Mor [Down Int] [Down Int, Down Int]
+    gt5: Hom [Down Int] [Down Int, Down Int]
     gt5 = mkPure "gt5: " (\n => if n > 5 then Left n else Right n) -.- splitEither
 
-    inc: Mor [Down Int] [Down Int]
+    inc: Hom [Down Int] [Down Int]
     inc = mkPure "inc: " (\i => i + 1)
 
-    downIntWire: Mor [Down Int] [Down Int]
+    downIntWire: Hom [Down Int] [Down Int]
     downIntWire = mkPure "down int: " id
 
-    upIntWire: Mor [Up Int] [Up Int]
+    upIntWire: Hom [Up Int] [Up Int]
     upIntWire = dualise downIntWire
 
 This can be visualised as:
@@ -132,7 +132,7 @@ Which is a process that, when an integer is sent to it's only input wire, will k
 
 * Install Idris: [instructions](https://github.com/idris-lang/Idris-dev/wiki/Installation-Instructions).
 * Download the repo: `git clone https://github.com/jameshaydon/smproc.git`
-* Start the idris repl: `$ idris Examples.idr` (compilation will take a while)
+* Start the idris repl: `cd src; idris -p contrib Examples.idr` (compilation will take a while)
 * Run main: `:exec main`
 
 ## TODO
