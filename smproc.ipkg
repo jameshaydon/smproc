@@ -15,4 +15,8 @@ modules = ProcessLib
         , Bord
         , Examples
 
+main = Examples
+
+executable = Examples
+
 opts = "-p contrib"
